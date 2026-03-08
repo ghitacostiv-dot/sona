@@ -1,0 +1,60 @@
+<Window x:Class="SONA.DependencyWizard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="First-Run Setup Wizard" Height="450" Width="600"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#0d0d1f">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Supreme Hub Dependency Installer" 
+                   FontSize="18" FontWeight="Bold" Foreground="#e2e8f0" Margin="0,0,0,10"/>
+
+        <ListBox Grid.Row="1" x:Name="DependencyListBox" 
+                 Background="#141430" Foreground="#e2e8f0" BorderBrush="#1e1e3a" BorderThickness="1"
+                 SelectionMode="Single">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                        <CheckBox IsChecked="{Binding IsSelected}" Foreground="#ccc"/>
+                        <TextBlock Text="{Binding DisplayName}" Width="220" Margin="5,0" Foreground="#e2e8f0"/>
+                        <TextBlock Foreground="#888">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                                            <Setter Property="Text" Value="✅ Installed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsInstalled}" Value="False">
+                                            <Setter Property="Text" Value="❌ Missing"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2" Margin="0,10" x:Name="ProgressPanel" Visibility="Collapsed">
+            <ProgressBar x:Name="InstallProgress" IsIndeterminate="True" Height="20"/>
+            <ScrollViewer MaxHeight="100" Margin="0,5">
+                <TextBox x:Name="LogTextBox" TextWrapping="Wrap" IsReadOnly="True" 
+                         VerticalScrollBarVisibility="Auto" Background="#1E1E1E" Foreground="Lime"/>
+            </ScrollViewer>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="InstallButton" Content="Install Selected" Padding="10,5" 
+                    Click="InstallButton_Click" Style="{StaticResource AccentBtn}"/>
+            <Button x:Name="CloseButton" Content="Close" Padding="10,5" Margin="5,0,0,0" 
+                    Click="CloseButton_Click" Style="{StaticResource DarkBtn}"/>
+        </StackPanel>
+    </Grid>
+</Window>

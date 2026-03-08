@@ -1,0 +1,7 @@
+<UserControl x:Class="SONA.Controls.MusicVisualizer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="40" Background="Transparent"
+             IsHitTestVisible="False">
+    <Canvas x:Name="VisualizerCanvas" VerticalAlignment="Bottom" />
+</UserControl>

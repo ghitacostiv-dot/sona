@@ -1,0 +1,370 @@
+<Window x:Class="SONA.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SONA.Controls"
+        Title="SONA" MinHeight="720" MinWidth="1100"
+        Height="1080" Width="1920"
+        WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent"
+        WindowState="Maximized"
+        Topmost="False"
+        ResizeMode="NoResize">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="36" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVis"/>
+    </Window.Resources>
+
+    <Border x:Name="RootBorder" Background="#0d0d1f" CornerRadius="12" ClipToBounds="True">
+        <Grid>
+            <Image x:Name="BgImage" Stretch="UniformToFill" Opacity="0.15" IsHitTestVisible="False"/>
+            <Grid x:Name="BgVideoContainer" IsHitTestVisible="False" Opacity="0">
+                <MediaElement x:Name="BgVideoA" Stretch="UniformToFill" IsMuted="True" LoadedBehavior="Manual" UnloadedBehavior="Manual" IsHitTestVisible="False" Opacity="1" RenderOptions.BitmapScalingMode="LowQuality"/>
+                <MediaElement x:Name="BgVideoB" Stretch="UniformToFill" IsMuted="True" LoadedBehavior="Manual" UnloadedBehavior="Manual" IsHitTestVisible="False" Opacity="0" RenderOptions.BitmapScalingMode="LowQuality"/>
+            </Grid>
+            <Border x:Name="BgVideoDimmer" IsHitTestVisible="False" Background="#60000000" Visibility="Collapsed"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- ── TITLE BAR ────────────────────────────────────── -->
+                <Border x:Name="TitleBar" Grid.Row="0" Background="#0a0a1a" MouseLeftButtonDown="TitleBar_MouseDown">
+                    <Grid>
+                        <!-- Logo -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0">
+                            <Image Source="pack://application:,,,/Resources/Icons/categories/games.png"
+                                   Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,7,0"
+                                   RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.85"/>
+                            <TextBlock Text="SONA" Foreground="#e2e8f0" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Window control buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0">
+                            <TextBlock x:Name="StatsLabel" Foreground="#444" FontSize="10" VerticalAlignment="Center" Margin="0,0,12,0"/>
+
+                            <!-- Minimize -->
+                            <Button x:Name="BtnMin" Width="32" Height="32" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" Click="BtnMin_Click" ToolTip="Minimize"
+                                    WindowChrome.IsHitTestVisibleInChrome="True" Visibility="Collapsed">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="bd" Background="Transparent" CornerRadius="4" Padding="7">
+                                            <Image Source="pack://application:,,,/Resources/Icons/window/minimize.png"
+                                                   Width="12" Height="12" RenderOptions.BitmapScalingMode="HighQuality"
+                                                   Opacity="0.55" x:Name="img"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="#20ffffff"/>
+                                                <Setter TargetName="img" Property="Opacity" Value="1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <!-- Maximize / Restore -->
+                            <Button x:Name="BtnMax" Width="32" Height="32" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" Click="BtnMax_Click" ToolTip="Maximize"
+                                    WindowChrome.IsHitTestVisibleInChrome="True" Visibility="Collapsed">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="bd" Background="Transparent" CornerRadius="4" Padding="7">
+                                            <Image Source="pack://application:,,,/Resources/Icons/window/maximize.png"
+                                                   Width="12" Height="12" RenderOptions.BitmapScalingMode="HighQuality"
+                                                   Opacity="0.55" x:Name="img"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="#20ffffff"/>
+                                                <Setter TargetName="img" Property="Opacity" Value="1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <!-- Close -->
+                            <Button x:Name="BtnClose" Width="32" Height="32" Background="Transparent"
+                                    BorderThickness="0" Cursor="Hand" Click="BtnClose_Click" ToolTip="Close"
+                                    WindowChrome.IsHitTestVisibleInChrome="True">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="bd" Background="Transparent" CornerRadius="4" Padding="7">
+                                            <Image Source="pack://application:,,,/Resources/Icons/window/close.png"
+                                                   Width="12" Height="12" RenderOptions.BitmapScalingMode="HighQuality"
+                                                   Opacity="0.55" x:Name="img"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="#33e8453e"/>
+                                                <Setter TargetName="img" Property="Opacity" Value="1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ── MAIN CONTENT ─────────────────────────────────── -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="SidebarColumn" Width="180"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Sidebar nav -->
+                    <Border x:Name="SidebarBorder" Grid.Column="0" Background="Transparent" BorderBrush="#1e1e3a" BorderThickness="0,0,1,0">
+                        <Grid>
+                            <!-- Blurred Background Banner with Video Rotation -->
+                            <Grid x:Name="SidebarBg" Opacity="0.5">
+                                <Grid x:Name="SidebarVideoGrid">
+                                    <MediaElement x:Name="SidebarVideoA" 
+                                                  LoadedBehavior="Manual" UnloadedBehavior="Manual"
+                                                  Stretch="UniformToFill" IsMuted="True"
+                                                  Opacity="1" IsHitTestVisible="False"
+                                                  RenderTransformOrigin="0.5,0.5"
+                                                  RenderOptions.BitmapScalingMode="LowQuality">
+                                        <MediaElement.RenderTransform>
+                                            <RotateTransform Angle="90"/>
+                                        </MediaElement.RenderTransform>
+                                    </MediaElement>
+                                    <MediaElement x:Name="SidebarVideoB" 
+                                                  LoadedBehavior="Manual" UnloadedBehavior="Manual"
+                                                  Stretch="UniformToFill" IsMuted="True"
+                                                  Opacity="0" IsHitTestVisible="False"
+                                                  RenderTransformOrigin="0.5,0.5"
+                                                  RenderOptions.BitmapScalingMode="LowQuality">
+                                        <MediaElement.RenderTransform>
+                                            <RotateTransform Angle="90"/>
+                                        </MediaElement.RenderTransform>
+                                    </MediaElement>
+                                    <Border IsHitTestVisible="False">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="Transparent" Offset="0"/>
+                                                <GradientStop Color="#661a0c20" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <!-- Sidebar Home Banner (Static Tittle.png) - PNG is 2.5x bigger -->
+                                <Border Grid.Row="0" Margin="8,12,8,10" Cursor="Hand" 
+                                        x:Name="SidebarHomeBanner"
+                                        Height="150" ClipToBounds="False"
+                                        MouseLeftButtonDown="SidebarHomeBanner_Click"
+                                        MouseEnter="SidebarHomeBanner_Enter" 
+                                        MouseLeave="SidebarHomeBanner_Leave"
+                                        RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform>
+                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                    </Border.RenderTransform>
+                                    <Image Source="pack://application:,,,/Resources/GUI/Tittle.png"
+                                           Height="150" Stretch="Uniform"
+                                           HorizontalAlignment="Left"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           Opacity="0.95">
+                                        <Image.RenderTransform>
+                                            <ScaleTransform ScaleX="2.5" ScaleY="2.5"/>
+                                        </Image.RenderTransform>
+                                        <Image.RenderTransformOrigin>
+                                            <Point X="0.5" Y="0.5"/>
+                                        </Image.RenderTransformOrigin>
+                                    </Image>
+                                </Border>
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel x:Name="NavPanel" Margin="12,0,4,4" HorizontalAlignment="Left"/>
+                                </ScrollViewer>
+                                <StackPanel Grid.Row="2" Margin="12,0,4,12">
+                                    <ToggleButton x:Name="BtnSideBack" Style="{StaticResource NavBtn}" Click="BtnSideBack_Click" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="⬅" Width="20" TextAlignment="Left" VerticalAlignment="Center" Foreground="#60a5fa"/>
+                                            <TextBlock Text="Back" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="#60a5fa" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton x:Name="BtnSideForward" Style="{StaticResource NavBtn}" Click="BtnSideForward_Click" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="➡" Width="20" TextAlignment="Left" VerticalAlignment="Center" Foreground="#60a5fa"/>
+                                            <TextBlock Text="Forward" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="#60a5fa" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton x:Name="BtnSideSettings" Style="{StaticResource NavBtn}" Click="BtnSideSettings_Click" MouseEnter="BtnSideSettings_MouseEnter" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="⚙️" Width="20" TextAlignment="Left" VerticalAlignment="Center" Foreground="#3b82f6"/>
+                                            <TextBlock Text="Settings" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="#3b82f6" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton x:Name="BtnSideExit" Style="{StaticResource NavBtn}" Click="BtnSideExit_Click" MouseEnter="BtnSideExit_MouseEnter" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="❌" Width="20" TextAlignment="Left" VerticalAlignment="Center" Foreground="#ef4444"/>
+                                            <TextBlock Text="Exit" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="#ef4444" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Page host -->
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border x:Name="FullscreenNotice" Grid.Row="0" Background="#ef4444" Padding="12,6" Visibility="Collapsed">
+                            <TextBlock Text="Press F11 to exit Fullscreen Mode" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </Border>
+                        
+                        <ContentControl x:Name="PageHost" Grid.Row="1" Background="Transparent"/>
+                        <Border x:Name="LeftHoverZone"
+                                Grid.Row="1"
+                                Width="10"
+                                Background="#00000000"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Stretch"
+                                MouseEnter="LeftHoverZone_MouseEnter"
+                                MouseLeave="LeftHoverZone_MouseLeave"/>
+                        <Button x:Name="SidebarRestoreBtn"
+                                Grid.Row="1"
+                                Content="▶"
+                                Style="{StaticResource DarkBtn}"
+                                Width="24" Height="24"
+                                Margin="2,6,0,0"
+                                Visibility="Collapsed"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="BtnRestoreSidebar_Click"/>
+                    </Grid>
+
+                    <!-- Audio Visualizer (Overlay at bottom of content) -->
+                    <controls:MusicVisualizer x:Name="MainVisualizer" Grid.Column="1" 
+                                              VerticalAlignment="Bottom" Height="40" 
+                                              Visibility="Collapsed" Margin="0,0,0,0"/>
+                </Grid>
+
+                <!-- Hidden audio engine -->
+                <MediaElement x:Name="AudioPlayer" LoadedBehavior="Manual" UnloadedBehavior="Manual"
+                              Visibility="Collapsed" Volume="0.7"/>
+
+                <!-- ── PLAYER BAR ────────────────────────────────────── -->
+                <Border Grid.Row="2" x:Name="PlayerBar" Background="#121212" BorderBrush="#282828"
+                        BorderThickness="0,1,0,0" Height="90" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Progress bar row -->
+                        <Grid Grid.Row="0" Margin="16,4,16,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="CurrentTimeLabel" Text="0:00" Foreground="#e2e8f0"
+                                       FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
+                                       Margin="0,0,10,0" Width="45" TextAlignment="Right"/>
+                            <Slider x:Name="ProgressSlider" Grid.Column="1"
+                                    Style="{StaticResource SpotifySlider}"
+                                    Minimum="0" Maximum="100" Value="0"
+                                    VerticalAlignment="Center" Focusable="False" Height="20" Cursor="Hand"
+                                    PreviewMouseLeftButtonDown="ProgressSlider_PreviewMouseLeftButtonDown"
+                                    PreviewMouseLeftButtonUp="ProgressSlider_PreviewMouseLeftButtonUp"
+                                    ValueChanged="ProgressSlider_ValueChanged"/>
+                            <TextBlock x:Name="TotalTimeLabel" Grid.Column="2" Text="0:00"
+                                       Foreground="#b3b3b3" FontSize="12" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" Width="45"/>
+                        </Grid>
+
+                        <!-- Controls row -->
+                        <Grid Grid.Row="1" Margin="16,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Track info -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Width="48" Height="48" CornerRadius="4" Background="#282828"
+                                        Margin="0,0,12,0" ClipToBounds="True">
+                                    <Image x:Name="PlayerArt" Stretch="UniformToFill"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock x:Name="PlayerTitle" Text="No track playing"
+                                               Foreground="White" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock x:Name="PlayerArtist" Text=""
+                                               Foreground="#b3b3b3" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Playback controls -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                                <Button x:Name="BtnShuffle" Style="{StaticResource PlayerControlBtn}"
+                                        Margin="6,0" Width="36" Height="36" ToolTip="Shuffle">
+                                    <Image Source="pack://application:,,,/Resources/Icons/player/shuffle.png"
+                                           Width="15" Height="15" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Button>
+
+                                <Button x:Name="BtnPrev" Style="{StaticResource PlayerControlBtn}"
+                                        Margin="3,0" Width="36" Height="36" ToolTip="Previous" Click="BtnPrev_Click">
+                                    <Image Source="pack://application:,,,/Resources/Icons/player/prev.png"
+                                           Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Button>
+
+                                <Button x:Name="BtnPlayPause" Style="{StaticResource CirclePlayBtn}"
+                                        Margin="10,0" Width="46" Height="46" ToolTip="Play / Pause" Click="BtnPlayPause_Click">
+                                    <Image x:Name="PlayPauseIcon"
+                                           Source="pack://application:,,,/Resources/Icons/player/pause.png"
+                                           Width="18" Height="18" RenderOptions.BitmapScalingMode="HighQuality"
+                                           Margin="2,0,0,0"/>
+                                </Button>
+
+                                <Button x:Name="BtnNext" Style="{StaticResource PlayerControlBtn}"
+                                        Margin="3,0" Width="36" Height="36" ToolTip="Next" Click="BtnNext_Click">
+                                    <Image Source="pack://application:,,,/Resources/Icons/player/next.png"
+                                           Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Button>
+
+                                <Button x:Name="BtnRepeat" Style="{StaticResource PlayerControlBtn}"
+                                        Margin="6,0" Width="36" Height="36" ToolTip="Repeat">
+                                    <Image Source="pack://application:,,,/Resources/Icons/player/repeat.png"
+                                           Width="15" Height="15" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Volume -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                        HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Image x:Name="VolumeIcon" Source="pack://application:,,,/Resources/Icons/player/volume.png"
+                                       Width="15" Height="15" Margin="0,0,8,0" Opacity="0.65"
+                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <Slider x:Name="VolumeSlider" Width="100" Minimum="0" Maximum="100"
+                                        Value="70" VerticalAlignment="Center" Focusable="False" Style="{StaticResource SpotifySlider}" ValueChanged="VolumeSlider_ValueChanged"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
