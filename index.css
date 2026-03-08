@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #e50914;
+  --color-bg: #0a0a0a;
+  --color-surface: rgba(26, 26, 26, 0.01);
+  --color-surface-hover: rgba(42, 42, 42, 0.03);
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  :root[data-theme="solid"] {
+    --color-bg: #0a0a0a;
+  }
+
+  :root[data-theme="amoled"] {
+    --color-bg: #000000;
+  }
+
+  :root[data-theme="transparent"] {
+    --color-bg: transparent;
+  }
+
+  body {
+    @apply text-white antialiased overflow-x-hidden;
+    background: var(--color-bg);
+    font-family: var(--font-sans);
+    transition: background 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :root:not([data-theme="solid"]):not([data-theme="amoled"]):not([data-theme="transparent"]) body {
+    background: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #0a0a0a 100%);
+  }
+
+  :root[data-theme="transparent"] body {
+    background: transparent !important;
+  }
+
+  :root[data-theme="transparent"] aside,
+  :root[data-theme="transparent"] .glass,
+  :root[data-theme="transparent"] .bg-surface {
+    background: rgba(0, 0, 0, 0.01) !important;
+    backdrop-filter: blur(16px);
+  }
+
+  :root:not([data-theme="solid"]):not([data-theme="amoled"]) body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://picsum.photos/seed/nexus/1920/1080?blur=10') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.15;
+    z-index: -1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  }
+}
+
+.glass {
+  @apply backdrop-blur-xl border border-white/10;
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+.poster-gradient {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 50%);
+}
+
+.hero-gradient {
+  background: linear-gradient(to top, #0a0a0a 0%, rgba(10, 10, 10, 0.2) 50%, rgba(10, 10, 10, 0.8) 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

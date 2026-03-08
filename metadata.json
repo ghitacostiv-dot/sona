@@ -1,0 +1,5 @@
+{
+  "name": "Nexus",
+  "description": "A high-performance media discovery and streaming platform featuring a modular addon system, cinematic UI, and cross-device syncing.",
+  "requestFramePermissions": []
+}

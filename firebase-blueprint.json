@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user preferences and basic info.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "LibraryItem": {
+      "title": "Library Item",
+      "description": "An item saved to the user's library.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "itemId": { "type": "string" },
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "poster": { "type": "string" },
+        "addedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "itemId", "type", "name"]
+    },
+    "HistoryItem": {
+      "title": "History Item",
+      "description": "An item the user has watched.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "itemId": { "type": "string" },
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "poster": { "type": "string" },
+        "watchedAt": { "type": "string", "format": "date-time" },
+        "progress": { "type": "number" },
+        "duration": { "type": "number" },
+        "season": { "type": "number" },
+        "episode": { "type": "number" }
+      },
+      "required": ["uid", "itemId", "type", "name"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/users/{uid}/library/{itemId}": {
+      "schema": "LibraryItem",
+      "description": "User library collection."
+    },
+    "/users/{uid}/history/{historyId}": {
+      "schema": "HistoryItem",
+      "description": "User watch history."
+    }
+  }
+}

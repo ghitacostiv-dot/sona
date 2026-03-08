@@ -1,0 +1,15 @@
+{
+    "name": "sona-stream-scraper",
+    "version": "1.0.0",
+    "description": "Master stream scraper - intercepts .m3u8/.mpd URLs from streaming sites using Playwright",
+    "main": "scraper.js",
+    "scripts": {
+        "start": "node scraper.js",
+        "dev": "node scraper.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "playwright": "^1.42.0",
+        "cors": "^2.8.5"
+    }
+}

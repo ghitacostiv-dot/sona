@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // ===============================================================
+    // User Profiles
+    // ===============================================================
+    match /users/{uid} {
+      function isValidUser(data) {
+        return data.uid == uid &&
+               data.email is string && isValidEmail(data.email) &&
+               (data.displayName == null || (data.displayName is string && data.displayName.size() < 100)) &&
+               (data.photoURL == null || (data.photoURL is string && data.photoURL.size() < 500));
+      }
+
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid) && isValidUser(request.resource.data);
+      allow update: if isOwner(uid) && isValidUser(request.resource.data);
+
+      // ===============================================================
+      // Library
+      // ===============================================================
+      match /library/{itemId} {
+        function isValidLibraryItem(data) {
+          return data.uid == uid &&
+                 data.itemId is string &&
+                 data.type in ['movie', 'series', 'channel'] &&
+                 data.name is string && data.name.size() > 0;
+        }
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) && isValidLibraryItem(request.resource.data);
+        allow update: if isOwner(uid) && isValidLibraryItem(request.resource.data);
+        allow delete: if isOwner(uid);
+      }
+
+      // ===============================================================
+      // History
+      // ===============================================================
+      match /history/{historyId} {
+        function isValidHistoryItem(data) {
+          return data.uid == uid &&
+                 data.itemId is string &&
+                 data.name is string && data.name.size() > 0 &&
+                 (data.progress == null || data.progress is number) &&
+                 (data.duration == null || data.duration is number);
+        }
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) && isValidHistoryItem(request.resource.data);
+        allow update: if isOwner(uid) && isValidHistoryItem(request.resource.data);
+        allow delete: if isOwner(uid);
+      }
+    }
+  }
+}
